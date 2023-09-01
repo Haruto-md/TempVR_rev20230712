@@ -1,0 +1,70 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using FrostweepGames.VoicePro;
+using FrostweepGames.Plugins.Native;
+using System.Linq;
+
+public class SoundInput : MonoBehaviour
+{
+    public Recorder recorder;
+    public Listener listener;
+    public bool isRecording;
+    public bool isKeyPressed;
+    private static int idx_misc = 0;
+    private static int num_misc = 1;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //num_misc = CustomMicrophone.devices.ToList().Count;
+        //Debug.Log(num_misc);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.R) && !isRecording)
+        {
+            StartRecord();
+        }
+        else if (Input.GetKeyUp(KeyCode.R) && isRecording)
+        {
+            StorpRecord();
+        }
+        else if (Input.GetKeyDown(KeyCode.T) && !isKeyPressed)
+        {
+            idx_misc++;
+            isKeyPressed = true;
+            Debug.Log(CustomMicrophone.devices[idx_misc % num_misc]);
+        }
+        else if(Input.GetKeyUp(KeyCode.T))
+        {
+            isKeyPressed = false;
+        }
+    }
+
+    public void StartRecord()
+    {
+        if(CustomMicrophone.HasConnectedMicrophoneDevices())
+        {
+            recorder.SetMicrophone(CustomMicrophone.devices[idx_misc % num_misc]);
+            isRecording = recorder.StartRecord();
+
+            Debug.Log("Record started:" + isRecording);
+        }
+        else
+        {
+            recorder.RefreshMicrophones();
+        }
+        recorder.StartRecord();
+    }
+
+    public void StorpRecord()
+    {
+        isRecording = false;
+        recorder.StopRecord();
+
+        Debug.Log("Record ended");
+    }
+}
