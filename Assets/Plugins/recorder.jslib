@@ -4,9 +4,9 @@ let mediaRecorder;
 
 mergeInto(LibraryManager.library,{
     startRecording: function () {
+        console.log("[JS1]start recording");
         navigator.mediaDevices.getUserMedia({audio: true,video:false})
         .then(stream => {
-            console.log("[JS1]start recording");
             audioChunks = [];
             audioContext = new AudioContext();
             mediaRecorder = new MediaRecorder(stream,{mimeType: 'audio/webm'})
