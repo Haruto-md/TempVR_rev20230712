@@ -71,7 +71,11 @@ mergeInto(LibraryManager.library,{
                             console.log("[JS]signifying")
                             var json_string = JSON.stringify(json_arguments);
                             console.log("[JS]Sending Message")
-                            unityInstance.SendMessage('AudioManager', 'ReceiveAudioData', json_string)
+                            try {
+                                unityInstance.SendMessage('AudioManager', 'ReceiveAudioData', json_string)
+                            }catch (error) {
+                                console.error("[JS] Error",error)
+                            }
                         }
                     });
                 };

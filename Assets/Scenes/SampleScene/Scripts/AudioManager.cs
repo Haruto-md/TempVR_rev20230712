@@ -60,45 +60,6 @@ public class AudioManager : MonoBehaviour
         public string blobUrl;
         public int samplingRate;
     }
-    
-
-    public void ReceiveAudioData_old(string json_arguments)
-    {
-        try
-        {
-            AudioArguments arguments = JsonUtility.FromJson<AudioArguments>(json_arguments);
-            byte[] byteArray = Convert.FromBase64String(arguments.arrayBuffer);
-
-            float[] audioDataFloat = ByteToFloatArray(byteArray);
-
-            Debug.Log("[Unity]Start Communincating");
-            StartCoroutine(requestor.ComunicateAPI(audioDataFloat, arguments.samplingRate));
-        }
-        catch (Exception e)
-        {
-            Debug.LogError("Exception caught: " + e.Message);
-        }
-
-
-        /*        Debug.Log("audioDataFloat.Length 1: " + audioDataFloat.Length);
-
-                AudioClip audioClip = AudioClip.Create("ReceivedAudioClip", audioDataFloat.Length, 1, arguments.samplingRate, false);
-
-                Debug.Log("audioClip.samples 1: "+audioClip.samples);
-
-                audioClip.SetData(audioDataFloat, 0);
-
-                Debug.Log("audioClip.samples 2: "+audioClip.samples);
-                Debug.Log("audioClip.loadState: " + audioClip.loadState);
-                Debug.Log("audioClip.loadType: " + audioClip.loadType);
-
-                float[] postAudioDataFloat = new float[audioClip.samples];
-                audioClip.GetData(audioDataFloat, 0);
-
-                var source = GetComponent<AudioSource>();
-                source.clip = audioClip;
-                source.Play();*/
-    }
 
     public void ReceiveAudioData(string json)
     {
@@ -107,6 +68,7 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator DownloadAudioData(string json)
     {
+        yield return 0;
         URLArguments arguments = JsonUtility.FromJson<URLArguments>(json);
         using (UnityWebRequest www = UnityWebRequest.Get(arguments.blobUrl))
         {
@@ -130,7 +92,7 @@ public class AudioManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Download error: " + www.error);
+                Debug.LogError("[Unity]Download error: " + www.error);
             }
         }
     }

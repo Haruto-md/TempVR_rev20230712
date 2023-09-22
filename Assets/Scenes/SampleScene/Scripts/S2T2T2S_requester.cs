@@ -43,6 +43,8 @@ public class S2T2T2S_requester : MonoBehaviour
         // リクエストを送信し、レスポンスを待機
         isRequesting = true;
         yield return request.SendWebRequest();
+        Debug.Log("[Unity]request has been finished!");
+        isRequesting = false;
 
         if (request.result != UnityWebRequest.Result.Success)
         {
@@ -50,8 +52,7 @@ public class S2T2T2S_requester : MonoBehaviour
         }
         else
         {
-            isRequesting = false;
-            Debug.Log("request complete!");
+            Debug.Log("[Unity]request has been completed Successfully!");
         }
     }
 
