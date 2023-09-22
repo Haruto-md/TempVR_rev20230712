@@ -10,7 +10,7 @@ using My.Communication;
 public class S2T2T2S_requester : MonoBehaviour
 {
     [SerializeField] public TextAsset textAsset;
-    
+    public InitializationManager InitializationManager;
     public string url;
     public List<AudioClip> receivedAudioClips = null;
     public int audioClipIndex = 0;
@@ -20,8 +20,17 @@ public class S2T2T2S_requester : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StartCoroutine(LoadConfigAndInitialize());
         audioSource = GetComponent<AudioSource>();
     }
+    private IEnumerator LoadConfigAndInitialize()
+    {
+        yield return StartCoroutine(InitializationManager.LoadJsonFile());
+        // LoadJsonFileÇ™äÆóπÇµÇΩå„Ç…é¿çsÇ≥ÇÍÇÈèàóù
+        var config = InitializationManager.config_data;
+        url = config.AI_Server_IP + ":" + config.AI_Server_Port + "/" + config.API_ENDPOINT;
+    }
+
     public IEnumerator ComunicateAPI(float[] audioDataFloat, int samplingRate)
     {
         StartCoroutine(playAudioSequentially());

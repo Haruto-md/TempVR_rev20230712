@@ -1,0 +1,5 @@
+{
+    "AI_Server_IP":"125.102.193.61",
+    "AI_Server_Port":"8000",
+    "API_ENDPOINT": "myapp/models/Whisper_ChatGPT_TTS/"
+}
