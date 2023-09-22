@@ -11,7 +11,7 @@ public class S2T2T2S_requester : MonoBehaviour
 {
     [SerializeField] public TextAsset textAsset;
     public InitializationManager InitializationManager;
-    public string url;
+    private string url;
     public List<AudioClip> receivedAudioClips = null;
     public int audioClipIndex = 0;
     public bool isRequesting;
@@ -28,7 +28,8 @@ public class S2T2T2S_requester : MonoBehaviour
         yield return StartCoroutine(InitializationManager.LoadJsonFile());
         // LoadJsonFileÇ™äÆóπÇµÇΩå„Ç…é¿çsÇ≥ÇÍÇÈèàóù
         var config = InitializationManager.config_data;
-        url = config.AI_Server_IP + ":" + config.AI_Server_Port + "/" + config.API_ENDPOINT;
+        url = "http://"+config.AI_Server_IP + ":" + config.AI_Server_Port + "/" + config.API_ENDPOINT;
+        Debug.Log("[Unity]URL is loaded: "+url);
     }
 
     public IEnumerator ComunicateAPI(float[] audioDataFloat, int samplingRate)
@@ -100,6 +101,7 @@ namespace My.Communication
         }
         protected override bool ReceiveData(byte[] data, int dataLength)
         {
+            Debug.Log("[Unity] Received Sliced Data");
             float[] samples = new float[data.Length / 4];
             Buffer.BlockCopy(data,0,samples,0,data.Length);
             int samplingRate = 20500;
