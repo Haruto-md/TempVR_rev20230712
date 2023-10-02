@@ -28,7 +28,7 @@ public class S2T2T2S_requester : MonoBehaviour
         yield return StartCoroutine(InitializationManager.LoadJsonFile());
         // LoadJsonFile‚ªŠ®—¹‚µ‚½Œã‚ÉÀs‚³‚ê‚éˆ—
         var config = InitializationManager.config_data;
-        url = "http://"+config.AI_Server_IP + ":" + config.AI_Server_Port + "/" + config.API_ENDPOINT;
+        url = "https://"+config.AI_Server_IP + ":" + config.AI_Server_Port + "/" + config.API_ENDPOINT;
         Debug.Log("[Unity]URL is loaded: "+url);
     }
 
