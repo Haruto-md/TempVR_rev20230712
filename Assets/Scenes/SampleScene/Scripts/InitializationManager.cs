@@ -5,45 +5,59 @@ using UnityEngine.Networking;
 
 public class InitializationManager : MonoBehaviour
 {
-    public string fileName = "configs.json"; // “Ç‚İ‚ŞJSONƒtƒ@ƒCƒ‹‚Ì–¼‘O
-    private string filePath; // ƒtƒ@ƒCƒ‹‚Ìƒtƒ‹ƒpƒX
+    public string fileName = "configs.json"; // ï¿½Ç‚İï¿½ï¿½ï¿½JSONï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Ì–ï¿½ï¿½O
+    private string filePath; // ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½pï¿½X
 
     [System.Serializable]
     public class ConfigData
     {
         public string AI_Server_IP;
         public string AI_Server_Port;
-        public string API_ENDPOINT;
+        public API_Configs API_Configs;
+        public string protcol;
+    }
+    public class API_Configs
+    {
+        public string AudioToTextEndPoint;
+        public string Text2AudioEndPoint;
+        public Chat Chat;
+
+    }
+    public class Chat{
+        public string ChatWhole
+        public string GetNewChat
+        public string InitialPrompt;
     }
 
     public ConfigData config_data;
     void Awake()
     {
-        // StreamingAssetsƒtƒHƒ‹ƒ_‚ÌƒpƒX‚ğæ“¾
+        // StreamingAssetsï¿½tï¿½Hï¿½ï¿½ï¿½_ï¿½Ìƒpï¿½Xï¿½ï¿½ï¿½æ“¾
         string streamingAssetsPath = Application.streamingAssetsPath;
 
-        // WebGL‚Ìê‡AStreamingAssets“à‚Ìƒtƒ@ƒCƒ‹‚É‚Í’¼ÚƒAƒNƒZƒX‚Å‚«‚È‚¢‚½‚ßAUnityWebRequest‚ğg—p‚µ‚Ä“Ç‚İ‚Ş
+        // WebGLï¿½Ìê‡ï¿½AStreamingAssetsï¿½ï¿½ï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½É‚Í’ï¿½ï¿½ÚƒAï¿½Nï¿½Zï¿½Xï¿½Å‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½ßAUnityWebRequestï¿½ï¿½ï¿½gï¿½pï¿½ï¿½ï¿½Ä“Ç‚İï¿½ï¿½ï¿½
         filePath = Path.Combine(streamingAssetsPath, fileName);
+        StartCoroutine(LoadConfig());
     }
 
-    public IEnumerator LoadJsonFile()
+    public IEnumerator LoadConfig()
     {
-        // UnityWebRequest‚ğg—p‚µ‚Äƒtƒ@ƒCƒ‹‚ğ”ñ“¯Šú‚Å“Ç‚İ‚Ş
+        // UnityWebRequestï¿½ï¿½ï¿½gï¿½pï¿½ï¿½ï¿½Äƒtï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ñ“¯Šï¿½ï¿½Å“Ç‚İï¿½ï¿½ï¿½
         using (UnityWebRequest www = UnityWebRequest.Get(filePath))
         {
             yield return www.SendWebRequest();
 
             if (www.result == UnityWebRequest.Result.Success)
             {
-                // JSONƒf[ƒ^‚ğ•¶š—ñ‚Æ‚µ‚Äæ“¾
+                // JSONï¿½fï¿½[ï¿½^ï¿½ğ•¶ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Äæ“¾
                 string jsonContent = www.downloadHandler.text;
 
-                // JSONƒf[ƒ^‚ğƒp[ƒX‚µ‚ÄC#‚Ìƒf[ƒ^\‘¢‚É•ÏŠ·
+                // JSONï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½pï¿½[ï¿½Xï¿½ï¿½ï¿½ï¿½C#ï¿½Ìƒfï¿½[ï¿½^ï¿½\ï¿½ï¿½ï¿½É•ÏŠï¿½
                 config_data = JsonUtility.FromJson<ConfigData>(jsonContent);
             }
             else
             {
-                Debug.LogError("JSONƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ‚É¸”s‚µ‚Ü‚µ‚½: " + www.error);
+                Debug.LogError("Failed to load Config.: " + www.error);
             }
         }
     }

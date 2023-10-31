@@ -32,7 +32,6 @@ mergeInto(LibraryManager.library,{
                         console.log("[JS4]buf",audioBuffer);
                         const source = audioContext.createBufferSource();
                         source.buffer = audioBuffer;
-                        source.connect(audioContext.destination);
                         source.start();
 
                         source.onended = (e) => {

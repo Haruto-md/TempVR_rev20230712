@@ -20,16 +20,7 @@ public class S2T2T2S_requester : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(LoadConfigAndInitialize());
         audioSource = GetComponent<AudioSource>();
-    }
-    private IEnumerator LoadConfigAndInitialize()
-    {
-        yield return StartCoroutine(InitializationManager.LoadJsonFile());
-        // LoadJsonFileÇ™äÆóπÇµÇΩå„Ç…é¿çsÇ≥ÇÍÇÈèàóù
-        var config = InitializationManager.config_data;
-        url = "https://"+config.AI_Server_IP + ":" + config.AI_Server_Port + "/" + config.API_ENDPOINT;
-        Debug.Log("[Unity]URL is loaded: "+url);
     }
 
     public IEnumerator ComunicateAPI(float[] audioDataFloat, int samplingRate)
