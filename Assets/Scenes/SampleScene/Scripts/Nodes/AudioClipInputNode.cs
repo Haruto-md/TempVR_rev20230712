@@ -3,18 +3,12 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Networking;
-using System.Text;
-
-public class AudioManager : MonoBehaviour
+public class AudioClipInputNode : BaseNode<AudioClip,AudioClip>,IAudioRecorder
 {
-    // 録音が開始されたかどうかのフラグ
-    private bool isRecording = false;
-
-    public S2T2T2S_requester requestor;
-
+    private bool _isRecording = false;
     private void Update()
     {
-        // キー入力などを検知して録音を制御
+        // 繧ｭ繝ｼ蜈･蜉帙↑縺ｩ繧呈､懃衍縺励※骭ｲ髻ｳ繧貞宛蠕｡
         if (Input.GetKeyDown(KeyCode.R))
         {
             StartRecording();
@@ -22,32 +16,40 @@ public class AudioManager : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.S))
         {
             StopRecording();
+        }else if(Input.GetKeyDown(KeyCode.C))
+        {
+            CancelRecording();
         }
     }
     [DllImport("__Internal")]
     private static extern void startRecording();
     [DllImport("__Internal")]
     private static extern void stopRecording();
-    // 録音を開始する関数
+
+    // 骭ｲ髻ｳ繧帝幕蟋九☆繧矩未謨ｰ
     public void StartRecording()
     {
-        if (!isRecording&&!requestor.isRequesting)
+        if (!_isRecording)
         {
             startRecording();
-            isRecording = true;
+            _isRecording = true;
         }
     }
 
-    // 録音を停止する関数
+    // 骭ｲ髻ｳ繧貞●豁｢縺吶ｋ髢｢謨ｰ
     public void StopRecording()
     {
-        if (isRecording)
+        if (_isRecording)
         {
             stopRecording();
-            isRecording = false;
+            _isRecording = false;
         }
     }
-
+    public void CancelRecording()
+    {
+        stopRecording();
+        //Not turn _isRecording into false
+    }
     [System.Serializable]
     private class AudioArguments
     {
@@ -63,7 +65,11 @@ public class AudioManager : MonoBehaviour
 
     public void ReceiveAudioData(string json)
     {
-        StartCoroutine(DownloadAudioData(json));
+        if(!_isRecording){
+            StartCoroutine(DownloadAudioData(json));
+        }else{
+            _isRecording = false;
+        }
     }
 
     private IEnumerator DownloadAudioData(string json)
@@ -86,25 +92,20 @@ public class AudioManager : MonoBehaviour
                     pcmArray[i] = BitConverter.ToSingle(decodedBytes, i * 4);
                 }
 
-                Debug.Log("[Unity]Start Communincating");
-                StartCoroutine(requestor.ComunicateAPI(pcmArray, arguments.samplingRate));
+                AudioClip audioClip;
+#if UNITY_WEBGL && !UNITY_EDITOR
+                audioClip = AudioClip.Create("recordedClip", (int)(pcmArray.Length * (arguments.samplingRate/44100f)), 1, arguments.samplingRate, false);
+#else
+                audioClip = AudioClip.Create("recordedClip", pcmArray.Length, 1,arguments.samplingRate, false);
+#endif
+                audioClip.SetData(pcmArray, 0);
+
+                SendData(audioClip);
             }
             else
             {
                 Debug.LogError("[Unity]Download error: " + www.error);
             }
         }
-    }
-    private float[] ByteToFloatArray(byte[] byteArray)
-    {
-        float[] floatArray = new float[byteArray.Length / 4];
-
-        for (int i = 0; i < floatArray.Length; i++)
-        {
-            byte[] tempBytes = new byte[4];
-            Array.Copy(byteArray, i * 4, tempBytes, 0, 4);
-            floatArray[i] = BitConverter.ToSingle(tempBytes, 0);
-        }
-        return floatArray;
     }
 }
