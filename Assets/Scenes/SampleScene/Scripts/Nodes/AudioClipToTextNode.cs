@@ -1,28 +1,31 @@
-using System.Collections.Generic;
 using System;
+using System.IO;
 using System.Collections;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Networking;
-using System.Text;
-public class AudioClipInputNode : BaseNode<AudioClip,string>
+public class AudioClipToTextNode : BaseNode<AudioClip,string>
 {
-    string _transcription;
+    private string _transcription;
+
     protected override IEnumerator ProcessData(AudioClip audioClip){
-        yield return AudioToTextAPI(audioClip.GetData(audioClip.samples,0),audioClip.frequency);
+
+        yield return AudioToTextAPI(audioClip);
         SendData(_transcription);
     }
-    public IEnumerator AudioToTextAPI(float[] audioDataFloat, int samplingRate)
+    public IEnumerator AudioToTextAPI(AudioClip audioClip)
     {
-        byte[] audioBinaryData = new byte[audioDataFloat.Length * 4];
-        Buffer.BlockCopy(audioDataFloat, 0, audioBinaryData, 0, audioBinaryData.Length);
+        float[] pcmData = new float[audioClip.samples];
+        audioClip.GetData(pcmData, 0);
+        byte[] audioBinaryData = new byte[pcmData.Length * 4];
+        Buffer.BlockCopy(pcmData, 0, audioBinaryData, 0, audioBinaryData.Length);
 
         var form = new WWWForm();
+        form.AddField("sampling_rate", audioClip.frequency);
         form.AddBinaryData("audio_data", audioBinaryData, "audio.wav", "audio/wav");
 
-        // UnityWebRequestを作成し、FormDataを設定
-        UnityWebRequest request = UnityWebRequest.Post(_config.API_ENDPOINTs.AudioToText, form);
-        request.downloadHandler = new DownloadHandler();
+        string url = "https://"+_config.AI_Server_IP_Port + _config.API_Configs.AudioToText;
+
+        UnityWebRequest request = UnityWebRequest.Post(url, form);
 
         // リクエストを送信し、レスポンスを待機
         yield return request.SendWebRequest();
@@ -32,10 +35,6 @@ public class AudioClipInputNode : BaseNode<AudioClip,string>
         if (request.result != UnityWebRequest.Result.Success)
         {
             Debug.Log(request.error);
-        }
-        else
-        {
-            Debug.Log("[Unity]request has been completed Successfully!");
         }
     }
 }

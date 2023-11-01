@@ -86,7 +86,6 @@ public class AudioManager : MonoBehaviour
                     pcmArray[i] = BitConverter.ToSingle(decodedBytes, i * 4);
                 }
 
-                Debug.Log("[Unity]AbsoluteMax" + FindAbsoluteMax(pcmArray));
                 Debug.Log("[Unity]Start Communincating");
                 StartCoroutine(requestor.ComunicateAPI(pcmArray, arguments.samplingRate));
             }
@@ -107,26 +106,5 @@ public class AudioManager : MonoBehaviour
             floatArray[i] = BitConverter.ToSingle(tempBytes, 0);
         }
         return floatArray;
-    }
-
-    private float FindAbsoluteMax(float[] array)
-    {
-        if (array == null || array.Length == 0)
-        {
-            throw new ArgumentException("Array is null or empty");
-        }
-
-        float maxAbsoluteValue = Math.Abs(array[0]);
-
-        for (int i = 1; i < array.Length; i++)
-        {
-            float absoluteValue = Math.Abs(array[i]);
-            if (absoluteValue > maxAbsoluteValue)
-            {
-                maxAbsoluteValue = absoluteValue;
-            }
-        }
-
-        return maxAbsoluteValue;
     }
 }

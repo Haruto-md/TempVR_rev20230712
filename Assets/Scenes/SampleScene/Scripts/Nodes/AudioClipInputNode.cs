@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Networking;
-using System.Text;
 public class AudioClipInputNode : BaseNode<AudioClip,AudioClip>,IAudioRecorder
 {
     private bool _isRecording = false;
@@ -44,7 +42,7 @@ public class AudioClipInputNode : BaseNode<AudioClip,AudioClip>,IAudioRecorder
         if (_isRecording)
         {
             stopRecording();
-            isRecording = false;
+            _isRecording = false;
         }
     }
     public void CancelRecording()
@@ -93,9 +91,15 @@ public class AudioClipInputNode : BaseNode<AudioClip,AudioClip>,IAudioRecorder
                 {
                     pcmArray[i] = BitConverter.ToSingle(decodedBytes, i * 4);
                 }
-                var audioClip = AudioClip.Create("recordedClip", pcmArray.Length, 1,arguments.samplingRate, false);
-                audioClip.GetData(pcmArray, 0);
-                //Send AudioClip To Next Node
+
+                AudioClip audioClip;
+#if UNITY_WEBGL && !UNITY_EDITOR
+                audioClip = AudioClip.Create("recordedClip", (int)(pcmArray.Length * (arguments.samplingRate/44100f)), 1, arguments.samplingRate, false);
+#else
+                audioClip = AudioClip.Create("recordedClip", pcmArray.Length, 1,arguments.samplingRate, false);
+#endif
+                audioClip.SetData(pcmArray, 0);
+
                 SendData(audioClip);
             }
             else
