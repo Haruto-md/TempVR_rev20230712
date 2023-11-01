@@ -10,6 +10,7 @@ public class API_Configs
     public string AudioToText;
     public Chat Chat;
     public string TextToAudio;
+    public string AudioCharacter;
 
 }
 [System.Serializable]

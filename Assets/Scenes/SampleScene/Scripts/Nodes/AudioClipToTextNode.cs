@@ -24,6 +24,10 @@ public class AudioClipToTextNode : BaseNode<AudioClip,string>
         form.AddBinaryData("audio_data", audioBinaryData, "audio.wav", "audio/wav");
 
         string url = "https://"+_config.AI_Server_IP_Port + _config.API_Configs.AudioToText;
+        if (_debug)
+        {
+            Debug.Log("url: "+url);
+        }
 
         UnityWebRequest request = UnityWebRequest.Post(url, form);
 

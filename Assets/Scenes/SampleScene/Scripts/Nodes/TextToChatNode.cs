@@ -28,7 +28,10 @@ public class TextToChatNode : BaseNode<string,string>
         form.AddField("temp_token", token);
 
         string url = "https://" + _config.AI_Server_IP_Port + _config.API_Configs.Chat.ChatWhole;
-
+        if (_debug)
+        {
+            Debug.Log("url: " + url);
+        }
         // UnityWebRequestÇçÏê¨ÇµÅAFormDataÇê›íË
         UnityWebRequest request = UnityWebRequest.Post(url, form);
         if (isSequencial)
@@ -41,7 +44,10 @@ public class TextToChatNode : BaseNode<string,string>
         string chatResponseJsonText = request.downloadHandler.text;
         ChatResponse chatResponseJson = JsonUtility.FromJson<ChatResponse>(chatResponseJsonText);
         _wholeChatResponse = chatResponseJson.resulting_sentences;
-
+        if (_debug) 
+        {
+            Debug.Log("Whole Chat Response:\n" + _wholeChatResponse);
+        }
         if (request.result != UnityWebRequest.Result.Success)
         {
             Debug.Log(request.error);
@@ -97,6 +103,7 @@ public class TextToChatNode : BaseNode<string,string>
                 }
             }
         }
+        Debug.Log("expires chat");
     }
     [System.Serializable]
     public class DeltaResponse

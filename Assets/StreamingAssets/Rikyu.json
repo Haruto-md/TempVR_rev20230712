@@ -1,0 +1,14 @@
+{
+    "AI_Server_IP_Port":"125.102.193.61:8000",
+    "API_Configs":
+    {
+        "AudioToText":"/myapp/models/SpeechToText/",
+        "Chat":{
+            "ChatWhole":"/myapp/models/Chat/",
+            "GetNewChat":"/myapp/models/Chat/GetNewChat/",
+            "InitialPrompt":"これから私が話しかけるので、あなたは千利休として喋ってください。\n具体的には、お茶が好きで何かに付けてお茶の話題を持ってきたがる感じです。"
+        },
+        "TextToAudio":"/myapp/models/TextToSpeech/",
+        "AudioCharacter":"Rikyu"
+    }
+}

@@ -4,11 +4,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using System.IO;
+using System.Net;
 
 public class BaseNode<IInput,IOutput> : MonoBehaviour, IDataReceiver<IInput>
 {
-    public List<GameObject > connectingNodes;
-    public string _fileName = "test_config.json";
+    public List<GameObject > _connectingNodes;
+    public List<string> _characterList;
+    private string _configFileName = "Chameba.json";
+    int _characterCount = 0;
+
     protected ConfigData _config;
     protected string _filePath;
     public bool _debug = false;
@@ -16,10 +20,30 @@ public class BaseNode<IInput,IOutput> : MonoBehaviour, IDataReceiver<IInput>
     {
         StartCoroutine(LoadConfig());
     }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            if (_characterList.Count > 0)
+            {
+                _characterCount++;
+                if (_characterCount == _characterList.Count)
+                {
+                    _characterCount = 0;
+                }
+                _configFileName = _characterList[_characterCount]+".json";
+                StartCoroutine(LoadConfig());
+                if (_debug)
+                {
+                    Debug.Log("Change Config to "+ _characterList[_characterCount]);
+                }
+            }
+        }
+    }
     private IEnumerator LoadConfig()
     {
         string streamingAssetsPath = Application.streamingAssetsPath;
-        _filePath = Path.Combine(streamingAssetsPath, _fileName);
+        _filePath = Path.Combine(streamingAssetsPath, _configFileName);
         using (UnityWebRequest www = UnityWebRequest.Get(_filePath))
         {
             yield return www.SendWebRequest();
@@ -39,7 +63,7 @@ public class BaseNode<IInput,IOutput> : MonoBehaviour, IDataReceiver<IInput>
     {
         if(node != null)
         {
-            connectingNodes.Add(node);
+            _connectingNodes.Add(node);
             if (_debug)
             {
                 Debug.Log(this.gameObject.name +": Connects to :" + node.name);
@@ -49,7 +73,7 @@ public class BaseNode<IInput,IOutput> : MonoBehaviour, IDataReceiver<IInput>
 
     public void Disconnect()
     {
-        connectingNodes.Clear();
+        _connectingNodes.Clear();
     }
     public void ReceiveData(IInput data)
     {
@@ -65,11 +89,7 @@ public class BaseNode<IInput,IOutput> : MonoBehaviour, IDataReceiver<IInput>
     }
     protected void SendData(IOutput data)
     {
-        if (_debug)
-        {
-            Debug.Log(this.gameObject.name + ": Send Data\n" + data);
-        }
-        foreach (GameObject node in connectingNodes)
+        foreach (GameObject node in _connectingNodes)
         {
             var receiver = node.GetComponent<IDataReceiver<IOutput>>();
             receiver.ReceiveData(data);

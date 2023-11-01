@@ -17,7 +17,15 @@ public class AudioClipSequencialPlayer : MonoBehaviour, IDataReceiver<AudioClip>
             PlayNextAudioClip();
             if (_debug)
             {
-                Debug.Log("Play Nect Audio. remaining: "+_audioClips.Count);
+                Debug.Log("Play Nect Audio. remaining: "+(_audioClips.Count-1));
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            if (_audioClips.Count != 0)
+            {
+                _audioClips.RemoveAt(0);
+                Debug.Log("Deleted audioClip. remaining: " + (_audioClips.Count-1));
             }
         }
     }
