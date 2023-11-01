@@ -347,7 +347,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectingNodes:
   - {fileID: 554842264}
-  _fileName: test_config.json
+  _fileName: config.json
   _debug: 1
 --- !u!1 &459559025
 GameObject:
@@ -497,7 +497,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectingNodes:
   - {fileID: 1510112545}
-  _fileName: test_config.json
+  _fileName: config.json
   _debug: 1
 --- !u!1 &601068464
 GameObject:
@@ -592,7 +592,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectingNodes:
   - {fileID: 1838269651}
-  _fileName: test_config.json
+  _fileName: config.json
   _debug: 1
 --- !u!1 &705507993
 GameObject:
@@ -1612,7 +1612,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectingNodes:
   - {fileID: 686958744}
-  _fileName: test_config.json
+  _fileName: config.json
   _debug: 1
   isSequencial: 1
 --- !u!1 &1804417690
@@ -1713,3 +1713,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 854733214f239b147b3bc1ca3304b78b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _debug: 1

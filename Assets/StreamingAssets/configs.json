@@ -1,15 +1,13 @@
 {
-    "AI_Server_IP":"125.102.193.61",
-    "AI_Server_Port":"8000",
-    "API_Configs": 
+    "AI_Server_IP_Port":"125.102.193.61:8000",
+    "API_Configs":
     {
-        "AudioToText":"models/SpeechToText/",
-        "TextToAudio":"models/TextToSpeech/",
+        "AudioToText":"/myapp/models/SpeechToText/",
         "Chat":{
-            "ChatWhole":"models/Chat/",
-            "GetNewChat":"models/Chat/GetNew/",
+            "ChatWhole":"/myapp/models/Chat/",
+            "GetNewChat":"/myapp/models/Chat/GetNewChat/",
             "InitialPrompt":"今から下記の人物として会話してください。一つ一つのセリフは簡潔にしてください。\n名前:サタン\n別称：魔王、大魔王\nプロフィール:世界の半分を征服した魔王。非常に傲慢で、利己的である。\nセリフ例:\n「この世全ては俺のためにあるのだ。」\n「なぜ俺がお前のために」"
-        }
-    },
-    "protcol":"https"
+        },
+        "TextToAudio":"/myapp/models/TextToSpeech/"
+    }
 }
